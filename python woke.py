@@ -2,7 +2,9 @@
 
 import tkinter as tk
 
-from pickle import *
+import tkinter.messagebox
+
+import pickle
 
 from tkinter.font import names
 
@@ -20,9 +22,25 @@ stunum=tk.StringVar()
 pwd=tk.StringVar()
 
 def login():
-    user_nam=name.get()
     user_stunum=stunum.get()
     user_pwd=pwd.get()
+    try:
+        with open("users_info.pickle","rb") as user_file:
+            users_info = pickle.load(user_file)
+    except FileNotFoundError:
+        with open("users_info.pickle","wb") as user_file:
+            users_info={"admin":"admin"}
+            pickle.dump(users_info,user_file)
+    if user_stunum in users_info:
+        if user_pwd == users_info[user_stunum]:
+            tk.messagebox.showinfo(message="欢迎"+user_stunum)
+        else:
+            tk.messagebox.showerrror("密码输入错误！请重试。")
+    else:
+        is_sign_up=tk.messagebox.askyesno(message="您还未注册！")
+        if is_sign_up:
+            zhuce()
+
 def zhuce(self):
     self.root.destroy()
     tk.RegisterPage()
