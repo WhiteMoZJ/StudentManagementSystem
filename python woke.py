@@ -2,6 +2,8 @@
 
 import tkinter as tk
 
+from pickle import *
+
 from tkinter.font import names
 
 from typing import Text
