@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import font
+from tkinter import Place, font
 from tkinter.constants import BUTT
 import csv
 
@@ -53,9 +53,10 @@ def impgad():
 
     b5=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean).place(x=400,y=280)#重置python程序设计成绩
 
-    b6=tk.Button(window,text="提交",bg="grey",font=13,width=20,height=2,command=commit)#commit函数为提交成绩到csv表格中的函数，皮昊旋不会写，在本文件4`5行定义了一个pass函数
-    b6.place(x=600,y=383)
+    b6=tk.Button(window,text="提交",font=13,width=20,height=2,command=commit)#commit函数为提交成绩到csv表格中的函数，皮昊旋不会写，在本文件4`5行定义了一个pass函数
+    b6.place(x=200,y=383)
 
+    b7=tk.Button(window,text="退出",font=13,width=20,height=2,command=exit).place(x=400,y=383)
     window.mainloop()
 
 def searchpergad():
@@ -74,7 +75,7 @@ def searchpergad():
 
     b1=tk.Button(window,text="查询",font=13,width=10,height=1,command=search).place(x=500,y=85)
 
-    b2=tk.Button(window,text="退出",font=13,width=10,height=1,command=exit)
+    b2=tk.Button(window,text="退出",font=13,width=10,height=1,command=exit).place(x=350,y=383)
 
 
     window.mainloop()
@@ -94,7 +95,7 @@ def stpergad():
 
     b1=tk.Button(window,text="查询",font=13,width=10,height=1,command=searchsum).place(x=500,y=85)
 
-    b2=tk.Button(window,text="退出",font=13,width=10,height=1,command=exit)
+    b2=tk.Button(window,text="退出",font=13,width=10,height=1,command=exit).place(x=350,y=383)
 
     window.mainloop()
 
@@ -113,9 +114,10 @@ def stallgad():
 
     b1=tk.Button(window,text="查询",font=13,width=10,height=1,command=searchall).place(x=500,y=85)
 
-    b2=tk.Button(window,text="退出",font=13,width=10,height=1,command=exit)
+    b2=tk.Button(window,text="退出",font=13,width=10,height=1,command=exit).place(x=350,y=383)
 
     window.mainloop()
 
 # def clean(s):
 #     s.set("")
+
