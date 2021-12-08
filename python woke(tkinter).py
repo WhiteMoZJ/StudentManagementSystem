@@ -8,6 +8,7 @@ from tkinter.font import names
 from typing import Sized, Text
 from time import *
 
+
 window=tk.Tk()
 
 window.title("学生信息管理系统")
@@ -19,18 +20,19 @@ stunum=tk.StringVar()
 
 pwd=tk.StringVar()
 
-r=1
-# def check(s):
-#     b=str(s)
-#     global r
-#     for i in b:
-#         if ord(i)<48 or (ord(i)>57 and ord(i)<65) or (ord(i)>90 and ord(i)<97) or ord(i)>122:
-#             r=0
-#             tk.messagebox.showerror(message="输入内容不符合要求！请重新输入")
-#             s.set("")
-#             break
-#     if r==1:
-#         pass
+#r=1
+def check(s):
+    b=str(s)
+    #global r
+    for i in b:
+        if ord(i)<48 or (ord(i)>57 and ord(i)<65) or (ord(i)>90 and ord(i)<97) or ord(i)>122:
+            #r=0
+            #tk.messagebox.showerror(message="输入内容不符合要求！请重新输入")
+            return 0
+            #
+    return 1
+    #if r==1:
+    #    pass
 
 
 cnt=0
@@ -38,7 +40,10 @@ def login():
     global cnt
     user_stunum=stunum.get()
     user_pwd=pwd.get()
-    # check(pwd)
+    if check(user_pwd)== 0:
+        tk.messagebox.showerror(message="输入内容不符合要求！请重新输入")
+        pwd.set("")
+        
     try:
         with open("C:\\Users\\皮\\Desktop\\python_work\\StudentManagementSystem\\new.txt","rb") as user_file:
             users_info = pickle.load(user_file)
@@ -50,13 +55,16 @@ def login():
         if user_pwd == users_info[user_stunum]:
             level2()#跳转到二级菜单
         else:
-            cnt+=1
-            tk.messagebox.showwarning(message="密码输入错误！还有%d次机会。"%(3-cnt))
-            # clean(e4)
-            if cnt == 3:
-                tk.messagebox.showinfo(message="您已输错密码3次，请于5分钟后再试！")
-                sleep(300)#锁定5min
-                cnt = 0
+            if check(user_pwd)== 0:
+                pass
+            else:
+                cnt+=1
+                tk.messagebox.showwarning(message="密码输入错误！还有%d次机会。"%(3-cnt))
+                pwd.set("")
+                if cnt == 3:
+                    tk.messagebox.showinfo(message="您已输错密码3次，请于5分钟后再试！")
+                    sleep(300)#锁定5min
+                    cnt = 0
         
     else:
         is_sign_up=tk.messagebox.askyesno(message="您还未注册！是否需要注册？")
