@@ -6,9 +6,11 @@ import csv
     
 def commit():
     pass
+
+
+
 def impgad():
-    def clean():
-        set("")
+    
     window=tk.Tk()
     window.geometry("800x450")
     window.title("成绩录入")
@@ -25,6 +27,20 @@ def impgad():
     gscrcmp=scrcmp.get()#获取大学计算机基础基础
     gscrpy=scrpy.get()#获取python程序设计成绩
 
+    def clean1():
+        scrmath.set("")
+
+    def clean2():
+        scrEgh.set("")
+
+    def clean3():
+        scrch.set("")
+
+    def clean4():
+        scrcmp.set("")
+
+    def clean5():
+        scrpy.set("")
 
     l1=tk.Label(window,text="请认真录入以下成绩",bg="grey",font=("Ariaal",13),width=800,height=2).pack()
 
@@ -43,15 +59,15 @@ def impgad():
     l6=tk.Label(window,text="python程序设计：",font=20).place(x=40,y=280)
     e6=tk.Entry(window,font=30,textvariable=scrpy).place(x=200,y=283)
 
-    b1=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean).place(x=400,y=80)#重置高等数学成绩
+    b1=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean1).place(x=400,y=80)#重置高等数学成绩
 
-    b2=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean).place(x=400,y=130)#重置英语读写译成绩
+    b2=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean2).place(x=400,y=130)#重置英语读写译成绩
 
-    b3=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean).place(x=400,y=180)#重置大学化学成绩
+    b3=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean3).place(x=400,y=180)#重置大学化学成绩
 
-    b4=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean).place(x=400,y=230)#重置大学计算机基础成绩
+    b4=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean4).place(x=400,y=230)#重置大学计算机基础成绩
 
-    b5=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean).place(x=400,y=280)#重置python程序设计成绩
+    b5=tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean5).place(x=400,y=280)#重置python程序设计成绩
 
     b6=tk.Button(window,text="提交",font=13,width=20,height=2,command=commit)#commit函数为提交成绩到csv表格中的函数，皮昊旋不会写，在本文件4`5行定义了一个pass函数
     b6.place(x=200,y=383)
@@ -118,6 +134,4 @@ def stallgad():
 
     window.mainloop()
 
-# def clean(s):
-#     s.set("")
-
+# impgad()
