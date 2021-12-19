@@ -45,10 +45,10 @@ def login():
         pwd.set("")
         
     try:
-        with open("C:\\Users\\皮\\Desktop\\python_work\\StudentManagementSystem\\new.txt","rb") as user_file:
+        with open("new.txt","rb") as user_file:
             users_info = pickle.load(user_file)
     except FileNotFoundError:
-        with open("C:\\Users\\皮\\Desktop\\python_work\\StudentManagementSystem\\new.txt","wb") as user_file:
+        with open("new.txt","wb") as user_file:
             users_info={"admin":"admin"}
             pickle.dump(users_info,user_file)
             # pickle.dump('\r\n')
@@ -77,7 +77,7 @@ def zhuce():
         ns=new_stunum.get()#获取被注册的学号
         np=new_pwd.get()#获取新注册账号的密码
         nf=new_pwd_confirm.get()#获取第二次输入的密码
-        with open("C:\\Users\\皮\\Desktop\\python_work\\StudentManagementSystem\\new.txt","rb") as user_file:
+        with open("new.txt","rb") as user_file:
             exist_user_info = pickle.load(user_file)
         if np!=nf:
             tk.messagebox.showerror(message="输入的密码与上一栏不一致，请重新输入。")
@@ -85,7 +85,7 @@ def zhuce():
             tk.messagebox.showerror(message="该用户已注册，请勿重复注册。")
         else:
             exist_user_info[ns]= np
-            with open("C:\\Users\\皮\\Desktop\\python_work\\StudentManagementSystem\\new.txt","wb") as user_file:
+            with open("new.txt","wb") as user_file:
                 pickle.dump(exist_user_info,user_file)
             tk.messagebox.showinfo(message="欢迎,您已经成功注册！")
             window_sign_up.destroy()#关闭注册页面
@@ -118,33 +118,30 @@ def switch_to_En():
     window.destroy()
     import pythonworkEn
 
-l1=tk.Label(window,text="欢迎来到学生信息管理系统",bg="grey",font=("Ariaal",13),width=800,height=2)
+def login_window():
+    l1=tk.Label(window,text="欢迎来到学生信息管理系统",bg="grey",font=("Ariaal",13),width=800,height=2)
+    l1.pack()
 
-l1.pack()
+    l2=tk.Label(window,text="请输入学号和密码",bg="white",font=13,width=800,height=2)
+    l2.pack()
 
-l2=tk.Label(window,text="请输入学号和密码",bg="white",font=13,width=800,height=2)
+    e1=tk.Label(window,text="学号：",font=15).place(x=275,y=98)
+    e3=tk.Label(window,text="密码：",font=15).place(x=275,y=138)
+    e2=tk.Entry(window,show=None,font=30,textvariable=stunum).place(x=325,y=98)
+    e4=tk.Entry(window,show="·",font=30,textvariable=pwd)
+    e4.place(x=325,y=138)
 
-l2.pack()
+    b1=tk.Button(window,text="登录",bg="grey",font=13,width=20,height=2,command=login)
+    b1.place(x=205,y=210)
 
-e1=tk.Label(window,text="学号：",font=15).place(x=275,y=98)
+    b2=tk.Button(window,text="注册",bg="grey",font=13,width=20,height=2,command=zhuce)
+    b2.place(x=405,y=210)
 
-e3=tk.Label(window,text="密码：",font=15).place(x=275,y=138)
+    b3=tk.Button(window,text="退出",bg="grey",font=13,width=20,height=2,command=exit)
+    b3.place(x=305,y=280)
 
-e2=tk.Entry(window,show=None,font=30,textvariable=stunum).place(x=325,y=98)
+    b4=tk.Button(window,text="Ch/En",bg="grey",font=13,width=10,height=1,command=switch_to_En)
+    b4.place(x=5,y=7)
 
-e4=tk.Entry(window,show="·",font=30,textvariable=pwd)
-e4.place(x=325,y=138)
-
-b1=tk.Button(window,text="登录",bg="grey",font=13,width=20,height=2,command=login)
-b1.place(x=205,y=210)
-
-b2=tk.Button(window,text="注册",bg="grey",font=13,width=20,height=2,command=zhuce)
-b2.place(x=405,y=210)
-
-b3=tk.Button(window,text="退出",bg="grey",font=13,width=20,height=2,command=exit)
-b3.place(x=305,y=280)
-
-b4=tk.Button(window,text="Ch/En",bg="grey",font=13,width=10,height=1,command=switch_to_En)
-b4.place(x=5,y=7)
-
+login_window()
 window.mainloop()
