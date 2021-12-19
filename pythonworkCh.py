@@ -26,8 +26,9 @@ def check(s):
     return 1
 
 #登录
+cnt=0
 def login():
-    cnt=0
+    global cnt
     user_stunum=stunum.get()
     user_pwd=pwd.get()
     if check(user_pwd)== 0:
