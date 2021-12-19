@@ -7,51 +7,40 @@ import pickle
 from tkinter.font import names
 from typing import Sized, Text
 from time import *
-
+from PWDEncryption import *
 
 window=tk.Tk()
-
 window.title("学生信息管理系统")
-
 window.geometry("800x450")
 name=tk.StringVar()
-
 stunum=tk.StringVar()
-
 pwd=tk.StringVar()
 
-#r=1
+#密码输入字符检查
 def check(s):
     b=str(s)
     #global r
     for i in b:
         if ord(i)<48 or (ord(i)>57 and ord(i)<65) or (ord(i)>90 and ord(i)<97) or ord(i)>122:
-            #r=0
-            #tk.messagebox.showerror(message="输入内容不符合要求！请重新输入")
             return 0
-            #
     return 1
-    #if r==1:
-    #    pass
 
-
-cnt=0
+#登录
 def login():
-    global cnt
+    cnt=0
     user_stunum=stunum.get()
     user_pwd=pwd.get()
     if check(user_pwd)== 0:
         tk.messagebox.showerror(message="输入内容不符合要求！请重新输入")
-        pwd.set("")
-        
+        pwd.set("")           
     try:
-        with open("new.txt","rb") as user_file:
+        with open("account.pkl","rb") as user_file:
             users_info = pickle.load(user_file)
     except FileNotFoundError:
-        with open("new.txt","wb") as user_file:
+        with open("account.pkl","wb") as user_file:
             users_info={"admin":"admin"}
             pickle.dump(users_info,user_file)
-            # pickle.dump('\r\n')
+            print(users_info)
     if user_stunum in users_info:
         if user_pwd == users_info[user_stunum]:
             level2()#跳转到二级菜单
@@ -65,19 +54,20 @@ def login():
                 if cnt == 3:
                     tk.messagebox.showinfo(message="您已输错密码3次，请于5分钟后再试！")
                     sleep(300)#锁定5min
-                    cnt = 0
-        
+                    cnt = 0       
     else:
         is_sign_up=tk.messagebox.askyesno(message="您还未注册！是否需要注册？")
         if is_sign_up:
             zhuce()
-def zhuce():
 
+#注册菜单                        
+def zhuce():
     def sign_up_in_system():
         ns=new_stunum.get()#获取被注册的学号
         np=new_pwd.get()#获取新注册账号的密码
         nf=new_pwd_confirm.get()#获取第二次输入的密码
-        with open("new.txt","rb") as user_file:
+
+        with open("account.pkl","rb") as user_file:
             exist_user_info = pickle.load(user_file)
         if np!=nf:
             tk.messagebox.showerror(message="输入的密码与上一栏不一致，请重新输入。")
@@ -85,12 +75,12 @@ def zhuce():
             tk.messagebox.showerror(message="该用户已注册，请勿重复注册。")
         else:
             exist_user_info[ns]= np
-            with open("new.txt","wb") as user_file:
+            with open("account.pkl","wb") as user_file:
                 pickle.dump(exist_user_info,user_file)
             tk.messagebox.showinfo(message="欢迎,您已经成功注册！")
             window_sign_up.destroy()#关闭注册页面
-            level2()
-            
+            level2()#打开二级菜单
+                
     window_sign_up = tk.Toplevel(window)
     window_sign_up.geometry("350x200")
     window_sign_up.title("注册")
@@ -114,11 +104,14 @@ def zhuce():
     btu_comfirm_sign_up=tk.Button(window_sign_up,text="注册",command=sign_up_in_system)
     btu_comfirm_sign_up.place(x=150,y=130)
 
+#中英文切换
 def switch_to_En():
     window.destroy()
-    import pythonworkEn
+    from pythonworkEn import login_window_EN
+    login_window_EN()
 
-def login_window():
+#登录菜单
+def login_window_CN():
     l1=tk.Label(window,text="欢迎来到学生信息管理系统",bg="grey",font=("Ariaal",13),width=800,height=2)
     l1.pack()
 
@@ -143,5 +136,5 @@ def login_window():
     b4=tk.Button(window,text="Ch/En",bg="grey",font=13,width=10,height=1,command=switch_to_En)
     b4.place(x=5,y=7)
 
-login_window()
+login_window_CN()
 window.mainloop()

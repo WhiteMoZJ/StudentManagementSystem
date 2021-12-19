@@ -7,6 +7,7 @@ import pickle
 from tkinter.font import names
 from typing import Sized, Text
 from time import *
+from PWDEncryption import *
 
 
 window=tk.Tk()
@@ -45,10 +46,10 @@ def login1():
         pwd.set("")
         
     try:
-        with open("new.txt","rb") as user_file:
+        with open("new.pkl","rb") as user_file:
             users_info = pickle.load(user_file)
     except FileNotFoundError:
-        with open("new.txt","wb") as user_file:
+        with open("new.pkl","wb") as user_file:
             users_info={"admin":"admin"}
             pickle.dump(users_info,user_file)
             # pickle.dump('\r\n')
@@ -77,7 +78,7 @@ def zhuce():
         ns=new_stunum.get()#获取被注册的学号
         np=new_pwd.get()#获取新注册账号的密码
         nf=new_pwd_confirm.get()#获取第二次输入的密码
-        with open("new.txt","rb") as user_file:
+        with open("new.pkl","rb") as user_file:
             exist_user_info = pickle.load(user_file)
         if np!=nf:
             tk.messagebox.showerror(message="The password entered is inconsistent with the previous column.Please re-enter it.")
@@ -85,7 +86,7 @@ def zhuce():
             tk.messagebox.showerror(message="The user has registered. Please do not register again.")
         else:
             exist_user_info[ns]= np
-            with open("new.txt","wb") as user_file:
+            with open("new.pkl","wb") as user_file:
                 pickle.dump(exist_user_info,user_file)
             tk.messagebox.showinfo(message="Welcome！You have regestered sucessfully!")
             window_sign_up.destroy()#关闭注册页面
@@ -117,9 +118,10 @@ def zhuce():
 
 def switch_to_Ch():
     window.destroy()
-    import pythonworkCh
+    from pythonworkCh import login_window_CN
+    login_window_CN()
 
-def login_window():
+def login_window_EN():
 
     l1=tk.Label(window,text="Wellcome to the student information management system",bg="grey",font=("Ariaal",13),width=800,height=2)
     l1.pack()
@@ -145,5 +147,5 @@ def login_window():
     b4=tk.Button(window,text="Ch/En",bg="grey",font=13,width=10,height=1,command=switch_to_Ch)
     b4.place(x=5,y=7)
     
-login_window()
+login_window_EN()
 window.mainloop()
