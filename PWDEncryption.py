@@ -38,26 +38,4 @@ class MyRSA():
         data = cipher_rsa.decrypt(en_data, None)
         return data
 
-#登录密码验证（密码，验证密码（学号））
-def Encrypt_check(pwd,passkey):
-    """
-    登录验证
-    1.可以用学号当作加密的密码
-    2.将输入的密码进行utf-8编码
-    3.对比两个编码是否相同
-    """
-    mrsa=MyRSA()
-    mrsa.Create_rsa_key(passkey)
-    enc=mrsa.Encrypt(pwd)
-    dec=mrsa.Decrypt(enc, passkey)
-    pwd_utf=pwd.encode('utf-8')     
-    print(enc)
-    print(dec)
-    if dec == pwd_utf:
-        print('yes')
-    else:
-        print('no')
-        
-passkey=input("输入学号")
-pwd=input("输入密码")
-Encrypt_check(passkey,pwd)
+mrsa=MyRSA() #转化为实例
