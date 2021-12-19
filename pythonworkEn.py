@@ -27,7 +27,7 @@ def check(s):
 
 #Login in
 cnt=0
-def login():
+def login1():
     global cnt
     user_stunum=stunum.get()
     user_pwd=pwd.get()
