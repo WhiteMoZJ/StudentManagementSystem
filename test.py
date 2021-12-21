@@ -8,6 +8,8 @@ def insert():
     # 插入数据
     info_data=pd.read_csv('new_text.csv')
     info = info_data.values.tolist()
+
+    print(info)
     for index, data in enumerate(info):
         table.insert('', END, values=data)  # 添加数据到末尾
 
@@ -30,7 +32,7 @@ if __name__ == '__main__':
     xscroll = Scrollbar(tabel_frame, orient=HORIZONTAL)
     yscroll = Scrollbar(tabel_frame, orient=VERTICAL)
 
-    columns = ['姓名', '学号', '高数', '英语', '化学', '计算机', 'Python']
+    columns = ['姓名', 'ID', '高等数学', '英语读写译', '大学化学', '大学计算机', 'Python程序设计','总分']
     table = ttk.Treeview(
             master=tabel_frame,  # 父容器
             height=10,  # 表格显示的行数,height行
