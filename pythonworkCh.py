@@ -43,7 +43,7 @@ def login():
             pickle.dump(users_info,user_file)
     if user_stunum in users_info:
         #解密密码
-        key=list (users_info.keys()) [list (users_info.values()).index (users_info[user_stunum])]
+        key=list(users_info.keys())[list(users_info.values()).index(users_info[user_stunum])]
         user_pwd_dec=mrsa.Decrypt(users_info[user_stunum],key)
 
         if user_pwd.encode('utf-8') == user_pwd_dec:
@@ -54,10 +54,10 @@ def login():
                 pass
             else:
                 cnt+=1
-                tk.messagebox.showwarning(message="密码输入错误！还有%d次机会。"%(3-cnt))
+                tk.messagebox.showinfo(message="密码输入错误！还有%d次机会。"%(3-cnt))
                 pwd.set("")
                 if cnt == 3:
-                    tk.messagebox.showinfo(message="您已输错密码3次，请于3分钟后再试！")
+                    tk.messagebox.showwarning(message="您已输错密码3次，请于3分钟后再试！")
                     cv.waitKey(180000)#锁定三分钟(此处单位为ms)
                     #有闪退的 BUG
                     cnt = 0
@@ -76,9 +76,11 @@ def zhuce():
         with open("account.pkl","rb") as user_file:
             exist_user_info = pickle.load(user_file)
         if np!=nf:
-            tk.messagebox.showerror(message="输入的密码与上一栏不一致，请重新输入。")
+            tk.messagebox.showerror(message="输入的密码与上一栏不一致，请重新输入。",parent=window_sign_up)
+        if np=='' or nf=='':
+            tk.messagebox.showerror(message="请输入的密码",parent=window_sign_up)
         elif ns in exist_user_info:
-            tk.messagebox.showerror(message="该用户已注册，请勿重复注册。")
+            tk.messagebox.showerror(message="该用户已注册，请勿重复注册。",parent=window_sign_up)
         else:
             #加密密码
             mrsa.Create_rsa_key(str(ns))           

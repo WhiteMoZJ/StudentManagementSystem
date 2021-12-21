@@ -43,7 +43,7 @@ def login1():
             pickle.dump(users_info,user_file)
     if user_stunum in users_info:
         #Decrypt pwd
-        key=list (users_info.keys()) [list (users_info.values()).index (users_info[user_stunum])]
+        key=list(users_info.keys())[list(users_info.values()).index(users_info[user_stunum])]
         user_pwd_dec=mrsa.Decrypt(users_info[user_stunum],key)
 
         if user_pwd.encode('utf-8') == user_pwd_dec:
@@ -54,10 +54,10 @@ def login1():
                 pass
             else:
                 cnt+=1
-                tk.messagebox.showwarning(message="You password is incorrect！You have only %d times。"%(3-cnt))
+                tk.messagebox.showinfo(message="You password is incorrect！You have only %d times。"%(3-cnt))
                 pwd.set("")
                 if cnt == 3:
-                    tk.messagebox.showinfo(message="You havee entered the wrong password 3 times！Please try agian in 3 minutes.")
+                    tk.messagebox.showwarning(message="You havee entered the wrong password 3 times！Please try agian in 3 minutes.")
                     cv.waitKey(180000)#Locked for 3min
                     #Flashback BUG
                     cnt = 0
@@ -76,9 +76,11 @@ def zhuce():
         with open("account.pkl","rb") as user_file:
             exist_user_info = pickle.load(user_file)
         if np!=nf:
-            tk.messagebox.showerror(message="The password entered is inconsistent with the previous column.Please re-enter it.")
+            tk.messagebox.showerror(message="The password entered is inconsistent with the previous column.Please re-enter it.",parent=window_sign_up)
+        if np=='' or nf=='':
+            tk.messagebox.showerror(message="Please enter password",parent=window_sign_up)
         elif ns in exist_user_info:
-            tk.messagebox.showerror(message="The user has registered. Please do not register again.")
+            tk.messagebox.showerror(message="The user has registered. Please do not register again.",parent=window_sign_up)
         else:
             #Encrypt pwd
             mrsa.Create_rsa_key(str(ns))           
