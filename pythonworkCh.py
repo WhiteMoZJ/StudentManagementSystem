@@ -6,7 +6,7 @@ import tkinter.messagebox
 import pickle
 from tkinter.font import names
 from typing import Sized, Text
-from time import *
+import cv2 as cv
 from PWDEncryption import *
 
 window=tk.Tk()
@@ -41,9 +41,13 @@ def login():
         with open("account.pkl","wb") as user_file:
             users_info={"admin":"admin"}
             pickle.dump(users_info,user_file)
-            print(users_info)
     if user_stunum in users_info:
-        if user_pwd == users_info[user_stunum]:
+        #解密密码
+        key=list (users_info.keys()) [list (users_info.values()).index (users_info[user_stunum])]
+        user_pwd_dec=mrsa.Decrypt(users_info[user_stunum],key)
+
+        if user_pwd.encode('utf-8') == user_pwd_dec:
+            window.destroy()
             level2()#跳转到二级菜单
         else:
             if check(user_pwd)== 0:
@@ -53,9 +57,10 @@ def login():
                 tk.messagebox.showwarning(message="密码输入错误！还有%d次机会。"%(3-cnt))
                 pwd.set("")
                 if cnt == 3:
-                    tk.messagebox.showinfo(message="您已输错密码3次，请于5分钟后再试！")
-                    sleep(300)#锁定5min
-                    cnt = 0       
+                    tk.messagebox.showinfo(message="您已输错密码3次，请于3分钟后再试！")
+                    cv.waitKey(180000)#锁定三分钟(此处单位为ms)
+                    #有闪退的 BUG
+                    cnt = 0
     else:
         is_sign_up=tk.messagebox.askyesno(message="您还未注册！是否需要注册？")
         if is_sign_up:
@@ -75,11 +80,16 @@ def zhuce():
         elif ns in exist_user_info:
             tk.messagebox.showerror(message="该用户已注册，请勿重复注册。")
         else:
-            exist_user_info[ns]= np
+            #加密密码
+            mrsa.Create_rsa_key(str(ns))           
+            np_enc=mrsa.Encrypt(np)
+            
+            exist_user_info[ns]= np_enc
             with open("account.pkl","wb") as user_file:
                 pickle.dump(exist_user_info,user_file)
             tk.messagebox.showinfo(message="欢迎,您已经成功注册！")
             window_sign_up.destroy()#关闭注册页面
+            window.destroy()
             level2()#打开二级菜单
                 
     window_sign_up = tk.Toplevel(window)
@@ -113,29 +123,30 @@ def switch_to_En():
 
 #登录菜单
 def login_window_CN():
-    l1=tk.Label(window,text="欢迎来到学生信息管理系统",bg="grey",font=("Ariaal",13),width=800,height=2)
+    l1=tk.Label(window,text="欢迎来到学生信息管理系统",bg="grey",font=('Arial',17,'bold'),width=800,height=2)
     l1.pack()
 
-    l2=tk.Label(window,text="请输入学号和密码",bg="white",font=13,width=800,height=2)
+    l2=tk.Label(window,text="请输入学号和密码",bg="white",font=('Arial',13,'bold'),width=800,height=2)
     l2.pack()
 
-    e1=tk.Label(window,text="学号：",font=15).place(x=275,y=98)
-    e3=tk.Label(window,text="密码：",font=15).place(x=275,y=138)
-    e2=tk.Entry(window,show=None,font=30,textvariable=stunum).place(x=325,y=98)
+    e1=tk.Label(window,text="学号：",font=('Arial',15,'bold')).place(x=265,y=105)
+    e3=tk.Label(window,text="密码：",font=('Arial',15,'bold')).place(x=265,y=138)
+    e2=tk.Entry(window,show=None,font=30,textvariable=stunum).place(x=325,y=108)
     e4=tk.Entry(window,show="·",font=30,textvariable=pwd)
-    e4.place(x=325,y=138)
+    e4.place(x=325,y=140)
 
-    b1=tk.Button(window,text="登录",bg="grey",font=13,width=20,height=2,command=login)
-    b1.place(x=205,y=210)
+    b1=tk.Button(window,text="登录",bg="grey",font=('Arial',14,'bold'),width=15,height=2,command=login)
+    b1.place(x=210,y=210)
 
-    b2=tk.Button(window,text="注册",bg="grey",font=13,width=20,height=2,command=zhuce)
-    b2.place(x=405,y=210)
+    b2=tk.Button(window,text="注册",bg="grey",font=('Arial',14,'bold'),width=15,height=2,command=zhuce)
+    b2.place(x=430,y=210)
 
-    b3=tk.Button(window,text="退出",bg="grey",font=13,width=20,height=2,command=exit)
-    b3.place(x=305,y=280)
+    b3=tk.Button(window,text="退出",bg="grey",font=('Arial',14,'bold'),width=20,height=2,command=exit)
+    b3.place(x=300,y=280)
 
-    b4=tk.Button(window,text="Ch/En",bg="grey",font=13,width=10,height=1,command=switch_to_En)
+    b4=tk.Button(window,text="Ch/En",bg="grey",font=('Arial',13,'bold'),width=10,height=1,command=switch_to_En)
     b4.place(x=5,y=7)
+    
+    window.mainloop()
 
 login_window_CN()
-window.mainloop()
