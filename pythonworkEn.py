@@ -6,7 +6,7 @@ import tkinter.messagebox
 import pickle
 from tkinter.font import names
 from typing import Sized, Text
-import cv2 as cv
+from time import *
 from PWDEncryption import *
 
 window=tk.Tk()
@@ -16,55 +16,53 @@ name=tk.StringVar()
 stunum=tk.StringVar()
 pwd=tk.StringVar()
 
-#Password string check
-def check(s):
-    b=str(s)
-    #global r
-    for i in b:
-        if ord(i)<48 or (ord(i)>57 and ord(i)<65) or (ord(i)>90 and ord(i)<97) or ord(i)>122:
-            return 0
-    return 1
+
 
 #Login in
-cnt=0
+cnt=0#Create a variable that records the number of times an incorrect pwd is entered
 def login1():
     global cnt
     user_stunum=stunum.get()
     user_pwd=pwd.get()
-    if check(user_pwd)== 0:
-        tk.messagebox.showerror(message="The input content does not meet the requirements！Please re-enter.")
-        pwd.set("")      
-    try:
-        with open("account.pkl","rb") as user_file:
-            users_info = pickle.load(user_file)
-    except FileNotFoundError:
-        with open("account.pkl","wb") as user_file:
-            users_info={"admin":"admin"}
-            pickle.dump(users_info,user_file)
-    if user_stunum in users_info:
-        #Decrypt pwd
-        key=list(users_info.keys())[list(users_info.values()).index(users_info[user_stunum])]
-        user_pwd_dec=mrsa.Decrypt(users_info[user_stunum],key)
-
-        if user_pwd.encode('utf-8') == user_pwd_dec:
-            window.destroy()
-            level2()#Turn to the secondary menu
-        else:
-            if check(user_pwd)== 0:
-                pass
-            else:
-                cnt+=1
-                tk.messagebox.showinfo(message="You password is incorrect！You have only %d times。"%(3-cnt))
-                pwd.set("")
-                if cnt == 3:
-                    tk.messagebox.showwarning(message="You havee entered the wrong password 3 times！Please try agian in 3 minutes.")
-                    cv.waitKey(180000)#Locked for 3min
-                    #Flashback BUG
-                    cnt = 0
+    #check the student number conform to requirement or not
+    if checkstunum(user_stunum) == 0 and user_stunum != "admin":
+        tk.messagebox.showerror(message='Please input the form of 2021XXYYY，the XX is from 01 to 09，YYY is from 000 to 999 ')
     else:
-        is_sign_up=tk.messagebox.askyesno(message="You are not registered yet！Do you need to register?")
-        if is_sign_up:
-            zhuce()
+        #when student number is true then check the format
+        if check(user_pwd)== 0:
+            tk.messagebox.showerror(message="The input content does not meet the requirements！Please re-enter.")
+            pwd.set("")      
+        try:
+            with open("account.pkl","rb") as user_file:
+                users_info = pickle.load(user_file)
+        except FileNotFoundError:
+            with open("account.pkl","wb") as user_file:
+                users_info={"admin":"admin"}
+                pickle.dump(users_info,user_file)
+                # pickle.dump('\r\n')
+        if user_stunum in users_info:
+            if user_pwd == users_info[user_stunum]:
+                if user_pwd == "admin":
+                    window.destroy()
+                    adpage()
+                else:
+                    window.destroy()
+                    level2()#Turn to the secondary menu
+            else:
+                if check(user_pwd)== 0:
+                    pass
+                else:
+                    cnt+=1
+                    tk.messagebox.showwarning(message="You password is incorrect！You have only %d times。"%(3-cnt))
+                    pwd.set("")
+                    if cnt == 3:
+                        tk.messagebox.showinfo(message="You havee entered the wrong password 3 times！Please try agian in five minutes.")
+                        sleep(300)#Locked for 5min
+                        cnt = 0
+        else:
+            is_sign_up=tk.messagebox.askyesno(message="You are not registered yet！Do you need to register?")
+            if is_sign_up:
+                zhuce()
 
 #Sign-up menu
 def zhuce():
@@ -72,48 +70,50 @@ def zhuce():
         ns=new_stunum.get()#Get stunum that has been signed up
         np=new_pwd.get()#Get pwd of new-sign-up account
         nf=new_pwd_confirm.get()#Get pwd second inputted
-        
-        with open("account.pkl","rb") as user_file:
-            exist_user_info = pickle.load(user_file)
-        if np!=nf:
-            tk.messagebox.showerror(message="The password entered is inconsistent with the previous column.Please re-enter it.",parent=window_sign_up)
-        if np=='' or nf=='':
-            tk.messagebox.showerror(message="Please enter password",parent=window_sign_up)
-        elif ns in exist_user_info:
-            tk.messagebox.showerror(message="The user has registered. Please do not register again.",parent=window_sign_up)
+        if checkstunum(ns) == 0:
+            tk.messagebox.showerror(message='Please input the form of 2021XXYYY，the XX is from 01 to 09，YYY is from 000 to 999 ',parent=window_sign_up)
+            #check the student number is true or not
         else:
-            #Encrypt pwd
-            mrsa.Create_rsa_key(str(ns))           
-            np_enc=mrsa.Encrypt(np)
-            
-            exist_user_info[ns]= np_enc
-            with open("account.pkl","wb") as user_file:
-                pickle.dump(exist_user_info,user_file)
-            tk.messagebox.showinfo(message="Welcome！You have regestered successfully!")
-            window_sign_up.destroy()#Shut down sign-up menu
-            window.destroy()
-            level2()#Open the secondary menu
+            with open("account.pkl","rb") as user_file:
+                exist_user_info = pickle.load(user_file)
+            if np!=nf:
+                tk.messagebox.showerror(message="The password entered is inconsistent with the previous column.Please re-enter it.",parent=window_sign_up)
+            elif ns in exist_user_info:
+                #if this student number in this file already, then tip this message
+                tk.messagebox.showerror(message="The user has registered. Please do not register again.",parent=window_sign_up)
+            else:
+                exist_user_info[ns]= np
+                with open("account.pkl","wb") as user_file:
+                    pickle.dump(exist_user_info,user_file)
+                tk.messagebox.showinfo(message="Welcome！You have regestered sucessfully!",parent=window_sign_up)
+                window_sign_up.destroy()#Shut down sign-up menu
+                window.destroy()
+                level2()#Open the secondary menu
             
     window_sign_up = tk.Toplevel(window)
     window_sign_up.geometry("350x200")
-    window_sign_up.title("SignUp")
+    window_sign_up.title("注册")
 
+#create the register student number tip words and the input box
     new_stunum=tk.StringVar()
     new_stunum.set("2021xxxxxxxxx")
     tk.Label(window_sign_up,text="Student Number：",font=('Arial',9,'bold')).place(x=10,y=10)
     entry_new_stunum=tk.Entry(window_sign_up,textvariable=new_stunum)
     entry_new_stunum.place(x=150,y=10)
 
+#create the register pwd tip words and input box
     new_pwd=tk.StringVar()
     tk.Label(window_sign_up,text="Password：",font=('Arial',9,'bold')).place(x=10,y=50)
     entry_new_pwd=tk.Entry(window_sign_up,textvariable=new_pwd,show="·")
     entry_new_pwd.place(x=150,y=50)
 
+#create the register validate pwd tip words and input box
     new_pwd_confirm = tk.StringVar()
     tk.Label(window_sign_up,text="Enter password again：",font=('Arial',9,'bold')).place(x=10,y=90)
     entry_pwd_confirm=tk.Entry(window_sign_up,textvariable=(new_pwd_confirm),show="·")
     entry_pwd_confirm.place(x=150,y=90)
 
+#create the button of register
     btu_comfirm_sign_up=tk.Button(window_sign_up,text="REGISTER",font=('Arial',13,'bold'),command=sign_up_in_system)
     btu_comfirm_sign_up.place(x=150,y=130)
 
