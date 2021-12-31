@@ -37,14 +37,18 @@ def login():
                 users_info = pickle.load(user_file)
         except FileNotFoundError:
             with open("account.pkl","wb") as user_file:
-                users_info={"admin":"admin"}
+                adpwd = Encrypt('admin')
+                users_info={"admin":adpwd}
                 pickle.dump(users_info,user_file)
                 print(users_info)
         if user_stunum in users_info:
-            if user_pwd == users_info[user_stunum]:
+            pwd_dec=Decrypt(users_info[user_stunum])
+            if user_pwd == pwd_dec:
                 if user_pwd == "admin":
+                    window.destroy()
                     adpage()
                 else:
+                    window.destroy()
                     level2()#跳转到二级菜单
             else:
                 if check(user_pwd)== 0:
@@ -69,22 +73,24 @@ def zhuce():
         np=new_pwd.get()#获取新注册账号的密码
         nf=new_pwd_confirm.get()#获取第二次输入的密码
         if checkstunum(ns) == 0:
-            tk.messagebox.showerror(message='请输入格式为2021XXYYY，其中XX从01到09，YYY从000到999的学号')
+            tk.messagebox.showerror(message='请输入格式为2021XXYYY，其中XX从01到09，YYY从000到999的学号',parent=window_sign_up)
         #检查学号是否符合要求
         else:
             with open("account.pkl","rb") as user_file:
                 exist_user_info = pickle.load(user_file)
             if np!=nf:
-                tk.messagebox.showerror(message="输入的密码与上一栏不一致，请重新输入。")
+                tk.messagebox.showerror(message="输入的密码与上一栏不一致，请重新输入。",parent=window_sign_up)
             elif ns in exist_user_info:
                 #如果注册的用户名已经在表格中，则提示
-                tk.messagebox.showerror(message="该用户已注册，请勿重复注册。")
+                tk.messagebox.showerror(message="该用户已注册，请勿重复注册。",parent=window_sign_up)
             else:
-                exist_user_info[ns]= np
+                pwd_enc = Encrypt(np)
+                exist_user_info[ns]= pwd_enc
                 with open("account.pkl","wb") as user_file:
                     pickle.dump(exist_user_info,user_file)
                 tk.messagebox.showinfo(message="欢迎,您已经成功注册！")
                 window_sign_up.destroy()#关闭注册页面
+                window.destroy()
                 level2()#打开二级菜单
                 
     window_sign_up = tk.Toplevel(window)
@@ -121,28 +127,28 @@ def switch_to_En():
 
 #登录菜单
 def login_window_CN():
-    l1=tk.Label(window,text="欢迎来到学生信息管理系统",bg="grey",font=("Ariaal",13),width=800,height=2)
+    l1=tk.Label(window,text="欢迎来到学生信息管理系统",bg="grey",font=('Arial',17,'bold'),width=800,height=2)
     l1.pack()
 
-    l2=tk.Label(window,text="请输入学号和密码",bg="white",font=13,width=800,height=2)
+    l2=tk.Label(window,text="请输入学号和密码",bg="white",font=('Arial',13,'bold'),width=800,height=2)
     l2.pack()
 
-    e1=tk.Label(window,text="学号：",font=15).place(x=275,y=98)
-    e3=tk.Label(window,text="密码：",font=15).place(x=275,y=138)
-    e2=tk.Entry(window,show=None,font=30,textvariable=stunum).place(x=325,y=98)
+    e1=tk.Label(window,text="学号：",font=('Arial',15,'bold')).place(x=265,y=105)
+    e3=tk.Label(window,text="密码：",font=('Arial',15,'bold')).place(x=265,y=138)
+    e2=tk.Entry(window,show=None,font=30,textvariable=stunum).place(x=325,y=108)
     e4=tk.Entry(window,show="·",font=30,textvariable=pwd)
-    e4.place(x=325,y=138)
+    e4.place(x=325,y=140)
 
-    b1=tk.Button(window,text="登录",bg="grey",font=13,width=20,height=2,command=login)
-    b1.place(x=205,y=210)
+    b1=tk.Button(window,text="登录",bg="grey",font=('Arial',14,'bold'),width=15,height=2,command=login)
+    b1.place(x=210,y=210)
 
-    b2=tk.Button(window,text="注册",bg="grey",font=13,width=20,height=2,command=zhuce)
-    b2.place(x=405,y=210)
+    b2=tk.Button(window,text="注册",bg="grey",font=('Arial',14,'bold'),width=15,height=2,command=zhuce)
+    b2.place(x=430,y=210)
 
-    b3=tk.Button(window,text="退出",bg="grey",font=13,width=20,height=2,command=exit)
-    b3.place(x=305,y=280)
+    b3=tk.Button(window,text="退出",bg="grey",font=('Arial',14,'bold'),width=20,height=2,command=exit)
+    b3.place(x=300,y=280)
 
-    b4=tk.Button(window,text="Ch/En",bg="grey",font=13,width=10,height=1,command=switch_to_En)
+    b4=tk.Button(window,text="Ch/En",bg="grey",font=('Arial',13,'bold'),width=10,height=1,command=switch_to_En)
     b4.place(x=5,y=7)
 
 login_window_CN()
