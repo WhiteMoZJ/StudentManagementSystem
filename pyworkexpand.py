@@ -61,27 +61,27 @@ def impgad():
                     #手动导入成绩数据
 #经测试 无法使用
     def clean1():
-        scrmath.bind('<Button-1>',scrmath.set(""))
+        scrmath.set("")
 
     def clean2():
-        scrEgh.bind('<Button-1>',scrEgh.set(""))
+        scrEgh.set("")
 
     def clean3():
-        scrch.bind('<Button-1>',scrch.set(""))
+        scrch.set("")
 
     def clean4():
-        scrcmp.bind('<Button-1>',scrcmp.set(""))
+        scrcmp.set("")
 
     def clean5():
-        scrpy.bind('<Button-1>',scrpy.set(""))
+        scrpy.set("")
     def clean6():
-        spn.bind('<Button-1>',spn.set(""))
+        spn.set("")
         
     tk.Label(window,text="请认真录入以下成绩和信息",bg="grey",font=("华文行楷",13),width=800,height=2).pack()
 
     tk.Label(window,text="高等数学：",font=20).place(x=100,y=90)
     tk.Entry(window,font=30,textvariable=scrmath).place(x=200,y=93)
-    tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1).place(x=410,y=90).bind('<Button-1>',scrmath.set(""))#重置高等数学成绩
+    #tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean1).place(x=410,y=90)#重置高等数学成绩
 
     tk.Label(window,text="英语读写译：",font=20).place(x=84,y=140)
     tk.Entry(window,font=30,textvariable=scrEgh).place(x=200,y=143)
@@ -89,7 +89,7 @@ def impgad():
 
     tk.Label(window,text="大学化学：",font=20).place(x=100,y=190)
     tk.Entry(window,font=30,textvariable=scrch).place(x=200,y=193)
-    tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1).place(x=410,y=190).bind('<Button-1>',scrch.set(""))#重置大学化学成绩
+    #tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean3).place(x=410,y=190)#重置大学化学成绩
 
     tk.Label(window,text="大学计算机基础：",font=20).place(x=40,y=240)
     tk.Entry(window,font=30,textvariable=scrcmp).place(x=200,y=243)
@@ -106,7 +106,7 @@ def impgad():
     tk.Entry(window,font=30,textvariable=spn).place(x=440,y=50)
     #tk.Button(window,text="重置",bg="grey",font=13,width=10,height=1,command=clean6).place(x=600,y=50)#重置电话号码
     
-    b6=tk.Button(window,text="提交",font=13,width=20,height=2,command=commit).place(x=400,y=583)
+    tk.Button(window,text="提交",font=13,width=20,height=2,command=commit).place(x=400,y=583)
   
 
 #学生个人成绩（分科）
